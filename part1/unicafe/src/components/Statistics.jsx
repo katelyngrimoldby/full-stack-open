@@ -1,3 +1,5 @@
+import Statistic from "./Statistic"
+
 const Statistics = ({good, neutral, bad}) => {
   const getAverage = (good, neutral, bad) => {
     return (good + (bad * -1)) / (good + neutral + bad)
@@ -10,12 +12,12 @@ const Statistics = ({good, neutral, bad}) => {
   if(good > 0 || neutral > 0 || bad > 0) {
     return(
       <div>
-          <p>Good: {good}</p>
-          <p>Neutral: {neutral}</p>
-          <p>Bad: {bad}</p>
-          <p>Total: {good + bad + neutral}</p>
-          <p>Average: {getAverage(good, neutral, bad)}</p>
-          <p>Positive: {getPositive(good, neutral, bad)}%</p>
+          <Statistic text="Good" value={good} />
+          <Statistic text="Neutral" value={neutral} />
+          <Statistic text="Bad" value={bad} />
+          <Statistic text="Total" value={good + bad + neutral} />
+          <Statistic text="Average" value={getAverage(good, neutral, bad)} />
+          <Statistic text="Positive" value={`${getPositive(good, neutral, bad)}%`} />
         </div>
     )
   } else {
