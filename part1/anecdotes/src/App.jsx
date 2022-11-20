@@ -5,7 +5,6 @@ const getRandomNumber = (range) => {
 }
 
 function App() {
-  const [selected, setSelected] = useState(0)
   const anecdotes = [
     'If it hurts, do it more often.',
     'Adding manpower to a late software project makes it later!',
@@ -15,11 +14,24 @@ function App() {
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.'
   ]
+  const [selected, setSelected] = useState(0)
+  const [points, setPoints] = useState(Array(anecdotes.length).fill(0))
+
+  const handleVote = () => {
+    const copy = [...points]
+    copy[selected] += 1
+    setPoints(copy)
+  }
+  
 
   return (
     <div className="App">
       {anecdotes[selected]}
-      <button onClick={() => setSelected(getRandomNumber(anecdotes.length))}>Get Random Anecdote</button>
+      <p>Has {points[selected]} votes</p>
+      <button onClick={handleVote}>Vote</button>
+      <button onClick={() => setSelected(getRandomNumber(anecdotes.length))}>
+        Next Anecdote
+      </button>
     </div>
   )
 }
