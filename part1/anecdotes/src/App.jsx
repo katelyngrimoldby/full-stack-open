@@ -23,6 +23,11 @@ function App() {
     setPoints(copy)
   }
   
+  const getHighestCount = () => {
+    const highestCount = Math.max(...points)
+
+    return points.indexOf(highestCount)
+  }
 
   return (
     <div className="App">
@@ -32,6 +37,10 @@ function App() {
       <button onClick={() => setSelected(getRandomNumber(anecdotes.length))}>
         Next Anecdote
       </button>
+
+      <h2>Anecdote with most votes</h2>
+      {anecdotes[getHighestCount()]}
+      <p>With {points[getHighestCount()]} votes</p>
     </div>
   )
 }
