@@ -11,14 +11,16 @@ const Statistics = ({good, neutral, bad}) => {
 
   if(good > 0 || neutral > 0 || bad > 0) {
     return(
-      <div>
-          <Statistic text="Good" value={good} />
-          <Statistic text="Neutral" value={neutral} />
-          <Statistic text="Bad" value={bad} />
-          <Statistic text="Total" value={good + bad + neutral} />
-          <Statistic text="Average" value={getAverage(good, neutral, bad)} />
-          <Statistic text="Positive" value={`${getPositive(good, neutral, bad)}%`} />
-        </div>
+      <table>
+          <tbody>
+            <Statistic text="Good" value={good} />
+            <Statistic text="Neutral" value={neutral} />
+            <Statistic text="Bad" value={bad} />
+            <Statistic text="Total" value={good + bad + neutral} />
+            <Statistic text="Average" value={getAverage(good, neutral, bad)} />
+            <Statistic text="Positive" value={`${getPositive(good, neutral, bad)}%`} />
+          </tbody>
+        </table>
     )
   } else {
     return <p>No feedback given</p>
