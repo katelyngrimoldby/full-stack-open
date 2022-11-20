@@ -8,10 +8,15 @@ function App() {
   const handleSubmit = (event) => {
     event.preventDefault()
 
-    const copy = entries.concat({name: newName})
-    setEntries(copy)
-
-    setNewName('')
+    if(entries.find(entry => entry.name.toUpperCase() === newName.toUpperCase())) {
+      alert(`${newName} is already in the phonebook`)
+      setNewName('')
+    } else {
+      const copy = entries.concat({name: newName})
+      setEntries(copy)
+  
+      setNewName('')
+    }
   }
 
   return (
