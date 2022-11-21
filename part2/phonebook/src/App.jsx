@@ -1,14 +1,23 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import Entries from './components/Entries'
-import Entry from "./components/Entry"
 import Form from './components/Form'
 import Filter from './components/Filter'
 
 function App() {
-  const [entries, setEntries] = useState([{name: "Ada Lovelace", number: "555-111-2222"}])
+  const [entries, setEntries] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/entries")
+      .then(response => {
+        const data = response.data
+        setEntries(data)
+      })
+  }, [])
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -38,7 +47,6 @@ function App() {
         handleSubmit={handleSubmit}
       />
       <h2>Numbers</h2>
-      {/* {entries.map(entry => <Entry key={entry.name} entry={entry} />)} */}
       <Entries entries={[...entries]} filter={filter} />
       
     </div>
