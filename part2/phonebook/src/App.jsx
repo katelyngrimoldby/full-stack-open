@@ -3,12 +3,15 @@ import entryService from './services/entryService'
 import Entries from './components/Entries'
 import Form from './components/Form'
 import Filter from './components/Filter'
+import Message from './components/Message'
+import './main.css'
 
 function App() {
   const [entries, setEntries] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [message, setMessage] = useState()
 
   useEffect(() => {
     entryService
@@ -26,7 +29,13 @@ function App() {
 
         entryService
           .update(entry.id, {name: newName, number: newNumber})
-          .then(newEntry => setEntries(entries.map(entry => entry.id !== newEntry.id ? entry : newEntry)))
+          .then(newEntry => {
+            setEntries(entries.map(entry => entry.id !== newEntry.id ? entry : newEntry))
+            setMessage({type: 'success', text: `Updated ${newEntry.name}'s number.`})
+            setTimeout(() => {
+              setMessage(undefined)
+            }, 5000)
+          })
       }
       
       setNewName('')
@@ -35,7 +44,13 @@ function App() {
       
       entryService
         .create({name: newName, number: newNumber})
-        .then(entry => setEntries(entries.concat(entry)))
+        .then(entry => {
+          setEntries(entries.concat(entry))
+          setMessage({type: 'success', text: `Added ${entry.name}'s number.`})
+          setTimeout(() => {
+            setMessage(undefined)
+          }, 5000)
+        })
   
       setNewName('')
       setNewNumber('')
@@ -49,6 +64,17 @@ function App() {
       .deleteEntry(id)
       .then(() => {
         setEntries([...entries].filter(entry => entry.id !== id))
+        setMessage({type: 'success', text: `Removed ${entry.name}'s number.`})
+        setTimeout(() => {
+          setMessage(undefined)
+        }, 5000)
+      })
+      .catch(() => {
+        setMessage({type: 'error', text: `${entry.name}'s information was already removed.`})
+        setEntries([...entries].filter(entry => entry.id !== id))
+        setTimeout(() => {
+          setMessage(undefined)
+        }, 5000)
       })
     }
     
@@ -57,6 +83,7 @@ function App() {
   return (
     <div className="App">
       <h1>Phonebook</h1>
+      <Message message={message} />
         <Filter value={filter} handleChange={(event) => setFilter(event.target.value)} />
       <h2>Add new Entry</h2>
       <Form name={newName} 
