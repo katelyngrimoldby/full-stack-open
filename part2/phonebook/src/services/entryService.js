@@ -12,4 +12,9 @@ const create = (payload) => {
   return req.then(res => res.data)
 }
 
-export default { getAll, create }
+const deleteEntry = (id) => {
+  return axios.delete(`http://localhost:3000/entries/${id}`)
+  
+}
+
+export default { getAll, create, deleteEntry }

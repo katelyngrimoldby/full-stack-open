@@ -34,6 +34,18 @@ function App() {
     }
   }
 
+  const handleDelete = (id) => {
+    const entry = entries.find(entry => entry.id === id)
+    if(window.confirm(`Delete ${entry.name}?`)) {
+      entryService
+      .deleteEntry(id)
+      .then(() => {
+        setEntries([...entries].filter(entry => entry.id !== id))
+      })
+    }
+    
+  }
+
   return (
     <div className="App">
       <h1>Phonebook</h1>
@@ -46,7 +58,7 @@ function App() {
         handleSubmit={handleSubmit}
       />
       <h2>Numbers</h2>
-      <Entries entries={[...entries]} filter={filter} />
+      <Entries entries={[...entries]} filter={filter} handleClick={(id) => handleDelete(id)} />
       
     </div>
   )
