@@ -20,7 +20,15 @@ function App() {
     event.preventDefault()
 
     if(entries.find(entry => entry.name.toUpperCase() === newName.toUpperCase())) {
-      alert(`${newName} is already in the phonebook`)
+
+      if(window.confirm(`${newName} is already in the phonebook. Replace their number with the new one?`)) {
+        const entry = entries.find(entry => entry.name.toUpperCase() === newName.toUpperCase())
+
+        entryService
+          .update(entry.id, {name: newName, number: newNumber})
+          .then(newEntry => setEntries(entries.map(entry => entry.id !== newEntry.id ? entry : newEntry)))
+      }
+      
       setNewName('')
       setNewNumber('')
     } else {

@@ -17,4 +17,10 @@ const deleteEntry = (id) => {
   
 }
 
-export default { getAll, create, deleteEntry }
+const update = (id, payload) => {
+  const req = axios.put(`http://localhost:3000/entries/${id}`, payload)
+
+  return req.then(res => res.data)
+}
+
+export default { getAll, create, deleteEntry, update }
