@@ -27,8 +27,11 @@ function App() {
       setNewName('')
       setNewNumber('')
     } else {
-      const copy = entries.concat({name: newName, number: newNumber})
-      setEntries(copy)
+      axios
+        .post("http://localhost:3000/entries", {name: newName, number: newNumber})
+        .then(response => {
+          setEntries(entries.concat(response.data))
+        })
   
       setNewName('')
       setNewNumber('')
