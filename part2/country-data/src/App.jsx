@@ -8,6 +8,7 @@ function App() {
   const [filter, setFilter] = useState('')
   const [filteredCountries, setFilteredCountries] = useState([])
   const [currentCountry, setCurrentCountry] = useState()
+  const [countryWeather, setCountryWeather] = useState()
 
   useEffect(() => {
     axios
@@ -29,6 +30,17 @@ function App() {
     setCurrentCountry(undefined)
   }, [filter])
 
+  useEffect(() => {
+    if(currentCountry) {
+      axios
+      .get(`https://api.openweathermap.org/data/2.5/weather?lat=${currentCountry.latlng[0]}&lon=${currentCountry.latlng[1]}&units=metric&appid=${import.meta.env.VITE_WEATHER_KEY}`)
+      .then(response => {
+        const data = response.data
+        setCountryWeather(data)
+      })
+    }
+  }, [currentCountry])
+
   return (
     <div className="App">
       <label htmlFor="filter">Find Countries</label>
@@ -41,7 +53,7 @@ function App() {
 
       <div>
         {currentCountry ? 
-          <CountryInfo country={currentCountry} /> 
+          <CountryInfo country={currentCountry} weather={countryWeather} /> 
         : (filteredCountries.length >= 10 ? 
           (<p>Please make your filtration more specific.</p>) 
         : (filteredCountries.length < 10 && filteredCountries.length > 1) ?
