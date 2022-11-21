@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import entryService from './services/entryService'
 import Entries from './components/Entries'
 import Form from './components/Form'
 import Filter from './components/Filter'
@@ -11,12 +11,9 @@ function App() {
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/entries")
-      .then(response => {
-        const data = response.data
-        setEntries(data)
-      })
+    entryService
+      .getAll()
+      .then(entries => setEntries(entries))
   }, [])
 
   const handleSubmit = (event) => {
@@ -27,11 +24,10 @@ function App() {
       setNewName('')
       setNewNumber('')
     } else {
-      axios
-        .post("http://localhost:3000/entries", {name: newName, number: newNumber})
-        .then(response => {
-          setEntries(entries.concat(response.data))
-        })
+      
+      entryService
+        .create({name: newName, number: newNumber})
+        .then(entry => setEntries(entries.concat(entry)))
   
       setNewName('')
       setNewNumber('')
