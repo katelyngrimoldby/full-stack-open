@@ -1,8 +1,11 @@
 import { useState } from 'react'
-
+import Entries from './components/Entries'
+import Entry from "./components/Entry"
+import Form from './components/Form'
+import Filter from './components/Filter'
 
 function App() {
-  const [entries, setEntries] = useState([])
+  const [entries, setEntries] = useState([{name: "Ada Lovelace", number: "555-111-2222"}])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
@@ -23,38 +26,21 @@ function App() {
     }
   }
 
-  const handleFilter = (entry) => {
-    if(filter.length > 0) {
-      if(entry.name.toUpperCase().includes(filter.toUpperCase())) {
-        return true
-      } else {
-        return false
-      } 
-    } else {
-      return true
-    }
-  }
-
   return (
     <div className="App">
       <h1>Phonebook</h1>
-        <label htmlFor="filterInput">Fliter: </label>
-        <input type="search" id="filterInput" value={filter} onChange={(event) => setFilter(event.target.value)} />
+        <Filter value={filter} handleChange={(event) => setFilter(event.target.value)} />
       <h2>Add new Entry</h2>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="nameInput">Name: </label>
-        <input type="text" id="nameInput" value={newName} onChange={(event) => setNewName(event.target.value)} />
-        <label htmlFor="numberInput">Number: </label>
-        <input type="text" id="numberInput" value={newNumber} onChange={(event) => setNewNumber(event.target.value)} />
-        <button type="submit">Add</button>
-      </form>
-
+      <Form name={newName} 
+        number={newNumber} 
+        handleName={(event) => setNewName(event.target.value)} 
+        handleNumber={(event) => setNewNumber(event.target.value)} 
+        handleSubmit={handleSubmit}
+      />
       <h2>Numbers</h2>
-      <div>
-        {entries.map(entry => {
-          return handleFilter(entry) ? (<p key={entry.name}>{entry.name}: {entry.number}</p>) : null
-        })}
-      </div>
+      {/* {entries.map(entry => <Entry key={entry.name} entry={entry} />)} */}
+      <Entries entries={[...entries]} filter={filter} />
+      
     </div>
   )
 }
