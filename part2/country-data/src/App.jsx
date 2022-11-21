@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-
+import Country from './components/Country'
+import CountryInfo from './components/CountryInfo'
 
 function App() {
   const [countries, setCountries] = useState([])
   const [filter, setFilter] = useState('')
   const [filteredCountries, setFilteredCountries] = useState([])
+  const [currentCountry, setCurrentCountry] = useState()
 
   useEffect(() => {
     axios
@@ -24,6 +26,7 @@ function App() {
     })
 
     setFilteredCountries(filtered)
+    setCurrentCountry(undefined)
   }, [filter])
 
   return (
@@ -37,20 +40,20 @@ function App() {
       />
 
       <div>
-        {filteredCountries.length >= 10 ? (<p>Please make your filtration more specific.</p>) : null}
-        {(filteredCountries.length < 10 && filteredCountries.length > 1) ? filteredCountries.map(country => <p key={country.name.common}>{country.name.common}</p>) : null}
-        {filteredCountries.length === 1 ? (
-          <div>
-            <h1>{filteredCountries[0].name.common}</h1>
-            <p>Capital: {filteredCountries[0].capital[0]}</p>
-            <p>Area: {filteredCountries[0].area}</p>
-            <h2>Languages: </h2>
-            <ul>
-              {Object.entries(filteredCountries[0].languages).map(language => <li key={language[0]}>{language[1]}</li>)}
-            </ul>
-            <img src={filteredCountries[0].flags.svg} alt="Flag" width="300" />
-          </div>
-        ) : null}
+        {currentCountry ? 
+          <CountryInfo country={currentCountry} /> 
+        : (filteredCountries.length >= 10 ? 
+          (<p>Please make your filtration more specific.</p>) 
+        : (filteredCountries.length < 10 && filteredCountries.length > 1) ?
+          filteredCountries.map(country => {
+            <Country key={country.name.common} 
+              country={country} 
+              handleClick={() => setCurrentCountry(country)} 
+            />
+          }) 
+        : filteredCountries.length === 1 ? 
+          setCurrentCountry(filteredCountries[0]) 
+        : null)}
       </div>
     </div>
   )
