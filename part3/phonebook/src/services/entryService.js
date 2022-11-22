@@ -1,24 +1,24 @@
 import axios from 'axios'
 
 const getAll = () => {
-  const req = axios.get("http://localhost:3000/api/entries")
+  const req = axios.get("/api/entries")
 
   return req.then(res => res.data)
 }
 
 const create = (payload) => {
-  const req = axios.post("http://localhost:3000/api/entries", payload)
+  const req = axios.post("/api/entries", payload)
 
   return req.then(res => res.data)
 }
 
 const deleteEntry = (id) => {
-  return axios.delete(`http://localhost:3000/api/entries/${id}`)
+  return axios.delete(`/api/entries/${id}`)
   
 }
 
 const update = (id, payload) => {
-  const req = axios.put(`http://localhost:3000/api/entries/${id}`, payload)
+  const req = axios.put(`/api/entries/${id}`, payload)
 
   return req.then(res => res.data)
 }
