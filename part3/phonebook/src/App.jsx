@@ -51,6 +51,12 @@ function App() {
             setMessage(undefined)
           }, 5000)
         })
+        .catch(error => {
+          setMessage({type: 'error', text: error.response.data.error})
+          setTimeout(() => {
+            setMessage(undefined)
+          }, 5000)
+        })
   
       setNewName('')
       setNewNumber('')
