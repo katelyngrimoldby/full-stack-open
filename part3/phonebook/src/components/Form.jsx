@@ -1,4 +1,4 @@
-const Form = ({name, number, handleName, handleNumber, handleSubmit}) => {
+const Form = ({ name, number, handleName, handleNumber, handleSubmit }) => {
   return(
     <form onSubmit={handleSubmit}>
       <label htmlFor="nameInput">Name: </label>
@@ -7,8 +7,7 @@ const Form = ({name, number, handleName, handleNumber, handleSubmit}) => {
       <input type="text" id="numberInput" value={number} onChange={handleNumber} />
       <button type="submit">Add</button>
     </form>
-  )
-  
-}
+  );
+};
 
 export default Form;
