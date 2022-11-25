@@ -11,6 +11,7 @@ const App = () => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     const userJSON = window.localStorage.getItem('User');
@@ -28,10 +29,15 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault();
 
-    const userData = await login({ username, password });
-    setUser(userData);
+    try {
+      const userData = await login({ username, password });
+      setUser(userData);
 
-    window.localStorage.setItem('User', JSON.stringify(userData));
+      window.localStorage.setItem('User', JSON.stringify(userData));
+    } catch(error) {
+      setMessage('Invalid username or password');
+      setTimeout(() => setMessage(''), 5000);
+    }
 
     setUsername('');
     setPassword('');
@@ -45,13 +51,26 @@ const App = () => {
   const handleCreation = async (event) => {
     event.preventDefault();
 
-    const newBlog = await blogService.addNew({ title, author, url }, user.token);
+    try {
+      const newBlog = await blogService.addNew({ title, author, url }, user.token);
 
-    setBlogs(blogs.concat(newBlog));
+      setBlogs(blogs.concat(newBlog));
+
+      setMessage(`Added ${title} by ${author}`);
+      setTimeout(() => setMessage(''), 5000);
+    } catch(error) {
+      setMessage(error.message);
+      setTimeout(() => setMessage(''), 5000);
+    }
+
+    setAuthor('');
+    setTitle('');
+    setUrl('');
   };
 
   return (
     <>
+      {message && (<p>{message}</p>)}
       {!user ? (
         <div>
           <h2>Log In</h2>
