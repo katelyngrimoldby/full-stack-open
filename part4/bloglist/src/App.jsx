@@ -1,17 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Blog from './components/Blog';
 import blogService from './services/blogs';
 import login from './services/login';
+import BlogForm from './components/BlogForm';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
   const [message, setMessage] = useState('');
+
+  const blogFormRef = useRef(null);
 
   useEffect(() => {
     const userJSON = window.localStorage.getItem('User');
@@ -48,24 +48,21 @@ const App = () => {
     setUser(undefined);
   };
 
-  const handleCreation = async (event) => {
-    event.preventDefault();
-
+  const handleCreation = async (blogObject) => {
     try {
-      const newBlog = await blogService.addNew({ title, author, url }, user.token);
+      const newBlog = await blogService.addNew(blogObject, user.token);
 
       setBlogs(blogs.concat(newBlog));
 
-      setMessage(`Added ${title} by ${author}`);
+      setMessage(`Added ${blogObject.title} by ${blogObject.author}`);
       setTimeout(() => setMessage(''), 5000);
     } catch(error) {
+      console.log(error);
       setMessage(error.message);
       setTimeout(() => setMessage(''), 5000);
     }
 
-    setAuthor('');
-    setTitle('');
-    setUrl('');
+    blogFormRef.current.handleClick();
   };
 
   return (
@@ -90,15 +87,7 @@ const App = () => {
             <Blog key={blog.id} blog={blog} />
           )}
           <h2>Create New</h2>
-          <form onSubmit={handleCreation}>
-            <label htmlFor="title">Title: </label>
-            <input type="text" id='title' value={title} onChange={(event) => setTitle(event.target.value)} />
-            <label htmlFor="author">Author: </label>
-            <input type="text" id='author'value={author} onChange={(event) => setAuthor(event.target.value)} />
-            <label htmlFor="url">URL: </label>
-            <input type="text" id='url' value={url} onChange={(event) => setUrl(event.target.value)} />
-            <button type="submit">Add</button>
-          </form>
+          <BlogForm createBlog={handleCreation} ref={blogFormRef} />
         </div>
       )}
     </>
