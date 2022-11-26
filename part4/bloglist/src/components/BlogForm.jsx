@@ -1,4 +1,5 @@
 import { useState, forwardRef } from 'react';
+import PropTypes from 'prop-types';
 import Toggle from './Toggle';
 
 const BlogForm = forwardRef(({ createBlog }, ref) => {
@@ -30,6 +31,10 @@ const BlogForm = forwardRef(({ createBlog }, ref) => {
     </Toggle>
   );
 });
+
+BlogForm.propTypes = {
+  createBlog: PropTypes.func.isRequired
+};
 
 BlogForm.displayName = 'BlogForm';
 
