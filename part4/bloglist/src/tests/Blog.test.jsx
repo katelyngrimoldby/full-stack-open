@@ -45,6 +45,20 @@ describe('Blog component', () => {
     const div = document.querySelector('.toggleable')
     expect(div).toBeInTheDocument();
   })
+
+  test('Calls update handler twice for two clicks to button', async () => {
+    const user = userEvent.setup();
+    const toggleButton = document.querySelector('.toggleButton')
+
+    await user.click(toggleButton)
+    
+    const updateButton = screen.getByText('Like')
+    
+    await user.click(updateButton)
+    await user.click(updateButton)
+
+    expect(mockUpdate.mock.calls).toHaveLength(2)
+  })
 })
 
 
