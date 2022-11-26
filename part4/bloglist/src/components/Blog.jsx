@@ -28,10 +28,10 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
     <div className="blog">
       <p>
         {blog.title} {blog.author}{' '}
-        <button onClick={handleToggle}>{visible ? 'hide' : 'show'}</button>
+        <button className="toggleButton" onClick={handleToggle}>{visible ? 'hide' : 'show'}</button>
       </p>
       {visible && (
-        <div classname="toggleable">
+        <div className="toggleable">
           <p>{blog.url}</p>
           <p>Likes: {blog.likes} <button onClick={handleUpdate}>Like</button></p>
           <p>Added by: {blog.user.name}</p>
