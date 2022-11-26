@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
   const [visible, setVisible] = useState(false);
 
   const handleToggle = () => {
@@ -17,6 +17,12 @@ const Blog = ({ blog, updateBlog }) => {
     });
   };
 
+  const handleDelete = () => {
+    if(window.confirm(`Remove ${blog.title} by ${blog.author}?`)) {
+      deleteBlog(blog.id);
+    }
+  };
+
   return(
     <div>
       <p>
@@ -28,6 +34,7 @@ const Blog = ({ blog, updateBlog }) => {
           <p>{blog.url}</p>
           <p>Likes: {blog.likes} <button onClick={handleUpdate}>Like</button></p>
           <p>Added by: {blog.user.name}</p>
+          {user.username === blog.user.username && (<button onClick={handleDelete}>Remove</button>)}
         </div>
       )}
     </div>

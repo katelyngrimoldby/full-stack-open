@@ -21,9 +21,9 @@ const App = () => {
       setUser(userData);
     }
 
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    );
+    blogService.getAll().then(blogs => {
+      setBlogs(blogs.sort((bloga, blogb) => blogb.likes - bloga.likes));
+    });
   }, []);
 
   const handleLogin = async (event) => {
@@ -52,7 +52,9 @@ const App = () => {
     try {
       const updatedBlog = await blogService.update(id, blogObject);
 
-      setBlogs([...blogs].map(blog => blog.id === updatedBlog.id ? updatedBlog : blog));
+      const newBlogs = [...blogs].map(blog => blog.id === updatedBlog.id ? updatedBlog : blog);
+
+      setBlogs(newBlogs.sort((bloga, blogb) => blogb.likes - bloga.likes));
       setMessage(`Liked ${blogObject.title} by ${blogObject.author}`);
       setTimeout(() => setMessage(''), 5000);
     } catch(error) {
@@ -77,6 +79,19 @@ const App = () => {
     blogFormRef.current.handleClick();
   };
 
+  const handleDelete = async (id) => {
+    try {
+      const blog = blogs.find(blog => blog.id === id);
+      await blogService.deleteBlog(id, user.token);
+      setBlogs([...blogs].filter(blog => blog.id !== id));
+      setMessage(`Removed ${blog.title} by ${blog.author}`);
+      setTimeout(() => setMessage(''), 5000);
+    } catch(error) {
+      setMessage(error.message);
+      setTimeout(() => setMessage(''), 5000);
+    }
+  };
+
   return (
     <>
       {message && (<p>{message}</p>)}
@@ -85,9 +100,19 @@ const App = () => {
           <h2>Log In</h2>
           <form onSubmit={handleLogin}>
             <label htmlFor="username">Username</label>
-            <input type='text' id='username' value={username} onChange={(event) => setUsername(event.target.value)}/>
+            <input
+              type='text'
+              id='username'
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+            />
             <label htmlFor="password">Password</label>
-            <input type='password' id='password' value={password} onChange={(event) => setPassword(event.target.value)}/>
+            <input
+              type='password'
+              id='password'
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
             <button type='submit'>Log In</button>
           </form>
         </div>) : (
@@ -96,7 +121,13 @@ const App = () => {
           <button onClick={handleLogout}>Log Out</button>
           <h2>blogs</h2>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} updateBlog={handleUpdate} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              user={user}
+              updateBlog={handleUpdate}
+              deleteBlog={handleDelete}
+            />
           )}
           <h2>Create New</h2>
           <BlogForm createBlog={handleCreation} ref={blogFormRef} />
