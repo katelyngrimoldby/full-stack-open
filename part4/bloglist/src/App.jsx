@@ -48,6 +48,19 @@ const App = () => {
     setUser(undefined);
   };
 
+  const handleUpdate = async (id, blogObject) => {
+    try {
+      const updatedBlog = await blogService.update(id, blogObject);
+
+      setBlogs([...blogs].map(blog => blog.id === updatedBlog.id ? updatedBlog : blog));
+      setMessage(`Liked ${blogObject.title} by ${blogObject.author}`);
+      setTimeout(() => setMessage(''), 5000);
+    } catch(error) {
+      setMessage(error.message);
+      setTimeout(() => setMessage(''), 5000);
+    }
+  };
+
   const handleCreation = async (blogObject) => {
     try {
       const newBlog = await blogService.addNew(blogObject, user.token);
@@ -57,7 +70,6 @@ const App = () => {
       setMessage(`Added ${blogObject.title} by ${blogObject.author}`);
       setTimeout(() => setMessage(''), 5000);
     } catch(error) {
-      console.log(error);
       setMessage(error.message);
       setTimeout(() => setMessage(''), 5000);
     }
@@ -84,7 +96,7 @@ const App = () => {
           <button onClick={handleLogout}>Log Out</button>
           <h2>blogs</h2>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} updateBlog={handleUpdate} />
           )}
           <h2>Create New</h2>
           <BlogForm createBlog={handleCreation} ref={blogFormRef} />
