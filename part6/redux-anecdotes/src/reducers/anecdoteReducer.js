@@ -25,6 +25,12 @@ const reducer = (state = initialState, action) => {
       const anecdote = state.find(anecdote => anecdote.id === action.data.id)
       const newState = state.filter(anecdote => anecdote.id !== action.data.id)
       return [...newState, {...anecdote, votes: anecdote.votes + 1}]
+    case 'CREATE':
+      return state.concat({
+        content: action.data.content,
+        id: getId(),
+        votes: 0
+      })
     default : 
       return state
   }
