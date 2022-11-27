@@ -33,9 +33,9 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
       {visible && (
         <div className="toggleable">
           <p>{blog.url}</p>
-          <p>Likes: {blog.likes} <button onClick={handleUpdate}>Like</button></p>
+          <p>Likes: {blog.likes} <button onClick={handleUpdate} className="likeButton">Like</button></p>
           <p>Added by: {blog.user.name}</p>
-          {user.username === blog.user.username && (<button onClick={handleDelete}>Remove</button>)}
+          {user.username === blog.user.username && (<button onClick={handleDelete} className="deleteButton">Remove</button>)}
         </div>
       )}
     </div>
