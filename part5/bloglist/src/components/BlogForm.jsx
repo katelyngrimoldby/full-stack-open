@@ -26,7 +26,7 @@ const BlogForm = forwardRef(({ createBlog }, ref) => {
         <input type="text" id='author'value={author} onChange={(event) => setAuthor(event.target.value)} />
         <label htmlFor="url">URL: </label>
         <input type="text" id='url' value={url} onChange={(event) => setUrl(event.target.value)} />
-        <button type="submit">Add</button>
+        <button type="submit" id="add">Add</button>
       </form>
     </Toggle>
   );

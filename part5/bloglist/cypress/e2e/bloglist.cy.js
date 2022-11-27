@@ -44,7 +44,7 @@ describe('Bloglist', () => {
         cy.get('#title').type('Sample Title')
         cy.get('#author').type('Sample Author')
         cy.get('#url').type('samplesite.com')
-        cy.contains('Add').click()
+        cy.get('#add').click()
 
         cy.contains('Sample Title')
         cy.contains('Sample Author')  
@@ -55,7 +55,7 @@ describe('Bloglist', () => {
         cy.get('#title').type('Sample Title')
         cy.get('#author').type('Sample Author')
         cy.get('#url').type('samplesite.com')
-        cy.contains('Add').click()
+        cy.get('#add').click()
 
         cy.get('.toggleButton').click()
         cy.get('.likeButton').click()
@@ -68,7 +68,7 @@ describe('Bloglist', () => {
         cy.get('#title').type('Sample Title')
         cy.get('#author').type('Sample Author')
         cy.get('#url').type('samplesite.com')
-        cy.contains('Add').click()
+        cy.get('#add').click()
 
         cy.get('.toggleButton').click()
 
@@ -82,7 +82,7 @@ describe('Bloglist', () => {
         cy.get('#title').type('Sample Title')
         cy.get('#author').type('Sample Author')
         cy.get('#url').type('samplesite.com')
-        cy.contains('Add').click().then(() => localStorage.removeItem('User'))
+        cy.get('#add').click().then(() => localStorage.removeItem('User'))
 
         cy.visit('http://localhost:5173')
         cy.request('POST', 'http://localhost:8080/api/users', {
@@ -98,6 +98,28 @@ describe('Bloglist', () => {
 
         cy.get('.toggleButton').click()
         cy.get('.deleteButton').should('not.exist')
+      })
+      it('Blogs are sorted by # of likes', () => {
+        cy.contains('Show').click()
+        cy.get('#title').type('Sample Title 1')
+        cy.get('#author').type('Sample Author')
+        cy.get('#url').type('samplesite.com')
+        cy.get('#add').click()
+
+        cy.contains('Show').click()
+        cy.get('#title').type('Sample Title 2')
+        cy.get('#author').type('Sample Author')
+        cy.get('#url').type('samplesite.com')
+        cy.get('#add').click()
+
+        cy.wait(200)
+
+        cy.get('.blog:last .toggleButton').click()
+        cy.get('.blog:last .likeButton').click()
+
+        
+
+        cy.get('.blog:last').should('contain', 'Sample Title 1')
       })
     })
   })
