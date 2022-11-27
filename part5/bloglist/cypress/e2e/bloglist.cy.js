@@ -13,4 +13,22 @@ describe('Bloglist', () => {
     cy.contains('Username')
     cy.contains('Password')
   })
+
+  describe('Login', () => {
+    it('Successful login', () => {
+      cy.get('#username').type('root')
+      cy.get('#password').type('root')
+      cy.get('#login').click()
+
+      cy.contains('Test User')
+    })
+
+    it('Failed login', () => {
+      cy.get('#username').type('root')
+      cy.get('#password').type('wrong')
+      cy.get('#login').click()
+
+      cy.contains('Invalid username or password')
+    })
+  })
 })
