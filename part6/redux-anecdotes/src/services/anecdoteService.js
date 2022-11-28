@@ -18,6 +18,16 @@ const addNew = async (payload) => {
   return response.data
 }
 
-const anecdoteService = { getAll, addNew }
+const update = async (payload) => {
+  const anecdote = {
+    content: payload.content,
+    id: payload.id,
+    votes: payload.votes + 1
+  }
+  const response = await axios.put(`${baseUrl}/${payload.id}`, anecdote)
+  return response.data
+}
+
+const anecdoteService = { getAll, addNew, update }
 
 export default anecdoteService
