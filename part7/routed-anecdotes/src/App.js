@@ -38,6 +38,8 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification(`Added ${anecdote.content} by ${anecdote.author}`)
+    setTimeout(() => setNotification(''), 5000)
   }
 
   const anecdoteById = (id) =>
@@ -58,6 +60,7 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Header />
+      {notification && (<p>{notification}</p>)}
       <Routes>
         <Route path="/" element={<Anecdotes anecdotes={anecdotes} />} />
         <Route path="/about" element={<About />} />
