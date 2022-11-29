@@ -1,20 +1,23 @@
-import { useState, useEffect, useRef } from "react";
-import Blog from "./components/Blog";
-import blogService from "./services/blogs";
-import login from "./services/login";
-import BlogForm from "./components/BlogForm";
+import { useState, useEffect, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { triggerMessage } from './reducers/messageReducer';
+import Blog from './components/Blog';
+import blogService from './services/blogs';
+import login from './services/login';
+import BlogForm from './components/BlogForm';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const message = useSelector((state) => state.message);
 
   const blogFormRef = useRef(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const userJSON = window.localStorage.getItem("User");
+    const userJSON = window.localStorage.getItem('User');
 
     if (userJSON) {
       const userData = JSON.parse(userJSON);
@@ -33,18 +36,17 @@ const App = () => {
       const userData = await login({ username, password });
       setUser(userData);
 
-      window.localStorage.setItem("User", JSON.stringify(userData));
+      window.localStorage.setItem('User', JSON.stringify(userData));
     } catch (error) {
-      setMessage("Invalid username or password");
-      setTimeout(() => setMessage(""), 5000);
+      dispatch(triggerMessage({ type: 'error', message: error.message }, 5));
     }
 
-    setUsername("");
-    setPassword("");
+    setUsername('');
+    setPassword('');
   };
 
   const handleLogout = () => {
-    window.localStorage.removeItem("User");
+    window.localStorage.removeItem('User');
     setUser(undefined);
   };
 
@@ -57,11 +59,17 @@ const App = () => {
       );
 
       setBlogs(newBlogs.sort((bloga, blogb) => blogb.likes - bloga.likes));
-      setMessage(`Liked ${blogObject.title} by ${blogObject.author}`);
-      setTimeout(() => setMessage(""), 5000);
+      dispatch(
+        triggerMessage(
+          {
+            type: 'success',
+            message: `Liked ${blogObject.title} by ${blogObject.author}`,
+          },
+          5
+        )
+      );
     } catch (error) {
-      setMessage(error.message);
-      setTimeout(() => setMessage(""), 5000);
+      dispatch(triggerMessage({ type: 'error', message: error.message }, 5));
     }
   };
 
@@ -71,11 +79,17 @@ const App = () => {
 
       setBlogs(blogs.concat(newBlog));
 
-      setMessage(`Added ${blogObject.title} by ${blogObject.author}`);
-      setTimeout(() => setMessage(""), 5000);
+      dispatch(
+        triggerMessage(
+          {
+            type: 'success',
+            message: `Added ${blogObject.title} by ${blogObject.author}`,
+          },
+          5
+        )
+      );
     } catch (error) {
-      setMessage(error.message);
-      setTimeout(() => setMessage(""), 5000);
+      dispatch(triggerMessage({ type: 'error', message: error.message }, 5));
     }
 
     blogFormRef.current.handleClick();
@@ -86,36 +100,42 @@ const App = () => {
       const blog = blogs.find((blog) => blog.id === id);
       await blogService.deleteBlog(id, user.token);
       setBlogs([...blogs].filter((blog) => blog.id !== id));
-      setMessage(`Removed ${blog.title} by ${blog.author}`);
-      setTimeout(() => setMessage(""), 5000);
+      dispatch(
+        triggerMessage(
+          {
+            type: 'success',
+            message: `Removed ${blog.title} by ${blog.author}`,
+          },
+          5
+        )
+      );
     } catch (error) {
-      setMessage(error.message);
-      setTimeout(() => setMessage(""), 5000);
+      dispatch(triggerMessage({ type: 'error', message: error.message }, 5));
     }
   };
 
   return (
     <>
-      {message && <p>{message}</p>}
+      {message && <p>{message.message}</p>}
       {!user ? (
         <div>
           <h2>Log In</h2>
           <form onSubmit={handleLogin}>
-            <label htmlFor="username">Username</label>
+            <label htmlFor='username'>Username</label>
             <input
-              type="text"
-              id="username"
+              type='text'
+              id='username'
               value={username}
               onChange={(event) => setUsername(event.target.value)}
             />
-            <label htmlFor="password">Password</label>
+            <label htmlFor='password'>Password</label>
             <input
-              type="password"
-              id="password"
+              type='password'
+              id='password'
               value={password}
               onChange={(event) => setPassword(event.target.value)}
             />
-            <button type="submit" id="login">
+            <button type='submit' id='login'>
               Log In
             </button>
           </form>
