@@ -1,19 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { triggerMessage } from './reducers/messageReducer';
+import { getBlogs, likeBlog, removeBlog } from './reducers/blogReducer';
+import { setAuth, getAuth, clearAuth } from './reducers/authReducer';
 import Blog from './components/Blog';
-import blogService from './services/blogs';
-import login from './services/login';
 import BlogForm from './components/BlogForm';
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [user, setUser] = useState();
+  const blogs = useSelector((state) => state.blogs);
+  const user = useSelector((state) => state.auth);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const message = useSelector((state) => state.message);
 
-  const blogFormRef = useRef(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -21,97 +20,31 @@ const App = () => {
 
     if (userJSON) {
       const userData = JSON.parse(userJSON);
-      setUser(userData);
+      dispatch(setAuth(userData));
     }
 
-    blogService.getAll().then((blogs) => {
-      setBlogs(blogs.sort((bloga, blogb) => blogb.likes - bloga.likes));
-    });
-  }, []);
+    dispatch(getBlogs());
+  }, [dispatch]);
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
-    try {
-      const userData = await login({ username, password });
-      setUser(userData);
-
-      window.localStorage.setItem('User', JSON.stringify(userData));
-    } catch (error) {
-      dispatch(triggerMessage({ type: 'error', message: error.message }, 5));
-    }
+    dispatch(getAuth({ username, password }));
 
     setUsername('');
     setPassword('');
   };
 
   const handleLogout = () => {
-    window.localStorage.removeItem('User');
-    setUser(undefined);
+    dispatch(clearAuth());
   };
 
   const handleUpdate = async (id, blogObject) => {
-    try {
-      const updatedBlog = await blogService.update(id, blogObject);
-
-      const newBlogs = [...blogs].map((blog) =>
-        blog.id === updatedBlog.id ? updatedBlog : blog
-      );
-
-      setBlogs(newBlogs.sort((bloga, blogb) => blogb.likes - bloga.likes));
-      dispatch(
-        triggerMessage(
-          {
-            type: 'success',
-            message: `Liked ${blogObject.title} by ${blogObject.author}`,
-          },
-          5
-        )
-      );
-    } catch (error) {
-      dispatch(triggerMessage({ type: 'error', message: error.message }, 5));
-    }
-  };
-
-  const handleCreation = async (blogObject) => {
-    try {
-      const newBlog = await blogService.addNew(blogObject, user.token);
-
-      setBlogs(blogs.concat(newBlog));
-
-      dispatch(
-        triggerMessage(
-          {
-            type: 'success',
-            message: `Added ${blogObject.title} by ${blogObject.author}`,
-          },
-          5
-        )
-      );
-    } catch (error) {
-      dispatch(triggerMessage({ type: 'error', message: error.message }, 5));
-    }
-
-    blogFormRef.current.handleClick();
+    dispatch(likeBlog(id, blogObject));
   };
 
   const handleDelete = async (id) => {
-    try {
-      const blog = blogs.find((blog) => blog.id === id);
-      await blogService.deleteBlog(id, user.token);
-      setBlogs([...blogs].filter((blog) => blog.id !== id));
-      dispatch(
-        triggerMessage(
-          {
-            type: 'success',
-            message: `Removed ${blog.title} by ${blog.author}`,
-          },
-          5
-        )
-      );
-    } catch (error) {
-      dispatch(triggerMessage({ type: 'error', message: error.message }, 5));
-    }
+    dispatch(removeBlog(id, user.token));
   };
 
   return (
@@ -155,7 +88,7 @@ const App = () => {
             />
           ))}
           <h2>Create New</h2>
-          <BlogForm createBlog={handleCreation} ref={blogFormRef} />
+          <BlogForm />
         </div>
       )}
     </>
