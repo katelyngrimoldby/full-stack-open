@@ -4,8 +4,13 @@ import { useNavigate } from'react-router-dom'
 const useField = type => {
   const [value, setValue] = useState('')
 
-  const onChange = event =>  {
-    setValue(event.target.value)
+  const onChange = (event, reset) =>  {
+    if(reset) {
+      setValue('')
+    } else {
+      setValue(event.target.value)
+    }
+    
   }
 
   return {
@@ -34,6 +39,12 @@ const CreateNew = ({ addNew }) => {
     navigate('/')
   }
 
+  const handleReset = (event) => {
+    content.onChange(event, 'reset')
+    author.onChange(event, 'reset')
+    info.onChange(event, 'reset')
+  }
+
   return (
     <div>
       <h2>create a new anecdote</h2>
@@ -51,6 +62,7 @@ const CreateNew = ({ addNew }) => {
           <input name='info' {...info} />
         </div>
         <button>create</button>
+        <button type='button' onClick={handleReset}>reset</button>
       </form>
     </div>
   )
