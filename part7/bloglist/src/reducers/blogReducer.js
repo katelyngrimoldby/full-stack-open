@@ -105,4 +105,25 @@ export const removeBlog = (id, token) => {
   }
 }
 
+export const addComment = (id, payload) => {
+  return async dispatch => {
+    try {
+      const updatedBlog = await blogService.addComment(id, payload)
+      dispatch(updateBlogs({id, updatedBlog}))
+
+      dispatch(
+        triggerMessage(
+          {
+            type: 'success',
+            message: `Commented on ${payload.title} by ${payload.author}`,
+          },
+          5
+        )
+      );
+    } catch(error) {
+      dispatch(triggerMessage({ type: 'error', message: error.response.data.error }, 5))
+    }
+  }
+}
+
 export default blogSlice.reducer
