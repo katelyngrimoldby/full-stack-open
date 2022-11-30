@@ -7,6 +7,7 @@ import { setAuth, getAuth, clearAuth } from './reducers/authReducer';
 import Blogs from './pages/Blogs';
 import Users from './pages/Users';
 import User from './pages/User';
+import Blog from './pages/Blog';
 
 const App = () => {
   const user = useSelector((state) => state.auth);
@@ -14,12 +15,17 @@ const App = () => {
   const [password, setPassword] = useState('');
   const message = useSelector((state) => state.message);
   const users = useSelector((state) => state.users);
+  const blogs = useSelector((state) => state.blogs);
 
-  const match = useMatch('/users/:id');
-  const foundUser = match
-    ? users.find((user) => user.id === match.params.id)
+  const userMatch = useMatch('/users/:id');
+  const foundUser = userMatch
+    ? users.find((user) => user.id === userMatch.params.id)
     : null;
 
+  const blogMatch = useMatch('/blogs/:id');
+  const foundBlog = blogMatch
+    ? blogs.find((blog) => blog.id === blogMatch.params.id)
+    : null;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -83,6 +89,8 @@ const App = () => {
             <Route path='/' element={<Blogs />} />
             <Route path='users' element={<Users />} />
             <Route path='users/:id' element={<User user={foundUser} />} />
+            <Route path='blogs' element={<Blogs />} />
+            <Route path='blogs/:id' element={<Blog blog={foundBlog} />} />
           </Routes>
         </>
       )}
