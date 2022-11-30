@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Routes, Route, useMatch } from 'react-router-dom';
+import { Routes, Route, useMatch, Link } from 'react-router-dom';
 import { getBlogs } from './reducers/blogReducer';
 import { getUsers } from './reducers/userReducer';
 import { setAuth, getAuth, clearAuth } from './reducers/authReducer';
@@ -82,7 +82,8 @@ const App = () => {
       ) : (
         <>
           <div>
-            <p>Logged in as {user.name}</p>
+            <Link to='/blogs'>Blogs</Link> <Link to='/users'>Users</Link>{' '}
+            <span>Logged in as {user.name}</span>{' '}
             <button onClick={handleLogout}>Log Out</button>
           </div>
           <Routes>
