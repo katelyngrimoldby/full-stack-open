@@ -1,17 +1,24 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useMatch } from 'react-router-dom';
 import { getBlogs } from './reducers/blogReducer';
 import { getUsers } from './reducers/userReducer';
 import { setAuth, getAuth, clearAuth } from './reducers/authReducer';
 import Blogs from './pages/Blogs';
 import Users from './pages/Users';
+import User from './pages/User';
 
 const App = () => {
   const user = useSelector((state) => state.auth);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const message = useSelector((state) => state.message);
+  const users = useSelector((state) => state.users);
+
+  const match = useMatch('/users/:id');
+  const foundUser = match
+    ? users.find((user) => user.id === match.params.id)
+    : null;
 
   const dispatch = useDispatch();
 
@@ -75,6 +82,7 @@ const App = () => {
           <Routes>
             <Route path='/' element={<Blogs />} />
             <Route path='users' element={<Users />} />
+            <Route path='users/:id' element={<User user={foundUser} />} />
           </Routes>
         </>
       )}
