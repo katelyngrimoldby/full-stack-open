@@ -1,13 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { triggerMessage } from './reducers/messageReducer';
-import { getBlogs, likeBlog, removeBlog } from './reducers/blogReducer';
+import { Routes, Route } from 'react-router-dom';
+import { getBlogs } from './reducers/blogReducer';
+import { getUsers } from './reducers/userReducer';
 import { setAuth, getAuth, clearAuth } from './reducers/authReducer';
-import Blog from './components/Blog';
-import BlogForm from './components/BlogForm';
+import Blogs from './pages/Blogs';
+import Users from './pages/Users';
 
 const App = () => {
-  const blogs = useSelector((state) => state.blogs);
   const user = useSelector((state) => state.auth);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -24,6 +24,7 @@ const App = () => {
     }
 
     dispatch(getBlogs());
+    dispatch(getUsers());
   }, [dispatch]);
 
   const handleLogin = async (event) => {
@@ -37,14 +38,6 @@ const App = () => {
 
   const handleLogout = () => {
     dispatch(clearAuth());
-  };
-
-  const handleUpdate = async (id, blogObject) => {
-    dispatch(likeBlog(id, blogObject));
-  };
-
-  const handleDelete = async (id) => {
-    dispatch(removeBlog(id, user.token));
   };
 
   return (
@@ -74,22 +67,16 @@ const App = () => {
           </form>
         </div>
       ) : (
-        <div>
-          <p>Logged in as {user.name}</p>
-          <button onClick={handleLogout}>Log Out</button>
-          <h2>blogs</h2>
-          {blogs.map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              user={user}
-              updateBlog={handleUpdate}
-              deleteBlog={handleDelete}
-            />
-          ))}
-          <h2>Create New</h2>
-          <BlogForm />
-        </div>
+        <>
+          <div>
+            <p>Logged in as {user.name}</p>
+            <button onClick={handleLogout}>Log Out</button>
+          </div>
+          <Routes>
+            <Route path='/' element={<Blogs />} />
+            <Route path='users' element={<Users />} />
+          </Routes>
+        </>
       )}
     </>
   );
