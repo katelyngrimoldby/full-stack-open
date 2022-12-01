@@ -98,7 +98,7 @@ const typeDefs = `#graphql
   type Query {
     bookCount: Int!
     authorCount: Int!
-    allBooks(author: String): [Book!]!
+    allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
   }
 `
@@ -108,11 +108,23 @@ const resolvers = {
     bookCount: () => books.length,
     authorCount: () => authors.length,
     allBooks: (root, args) => {
+      let submittedBooks = books
       if(args.author) {
-        return books.filter(book => book.author === args.author)
+        submittedBooks =  submittedBooks.filter(book => book.author.toLowerCase() === args.author.toLowerCase())
+      }
+      
+      if (args.genre) {
+        submittedBooks = submittedBooks.map(book => {
+          return {
+            ...book,
+            genres: book.genres.map(genre => genre.toLowerCase())
+          } 
+        })
+        
+        submittedBooks = submittedBooks.filter(book => book.genres.includes(args.genre.toLowerCase()))
       }
 
-      return books
+      return submittedBooks
     },
     allAuthors: () => authors
   },
