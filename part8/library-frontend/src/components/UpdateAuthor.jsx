@@ -6,9 +6,7 @@ const UpdateAuthor = ({ show, authors }) => {
   const [name, setName] = useState('');
   const [year, setYear] = useState('');
 
-  const [editAuthor] = useMutation(queries.EDIT_AUTHOR, {
-    refetchQueries: [{ query: queries.ALL_AUTHORS }],
-  });
+  const [editAuthor] = useMutation(queries.EDIT_AUTHOR);
 
   if (!show) {
     return null;

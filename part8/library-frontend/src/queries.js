@@ -5,7 +5,6 @@ const ALL_AUTHORS = gql`
     allAuthors {
       name
       born
-      bookCount
       id
     }
   }
@@ -15,7 +14,9 @@ const ALL_BOOKS = gql`
   query {
     allBooks {
       title
-      author
+      author {
+        name
+      }
       published
       id
     }
@@ -45,11 +46,18 @@ const EDIT_AUTHOR = gql`
     ) {
       name
       born
-      bookCount
       id
     }
   }
 `
 
+const LOGIN = gql`
+mutation($username: String! $password: String!) {
+  login(username: $username, password: $password) {
+    value
+  }
+}
+`
 
-export default {ALL_AUTHORS, ALL_BOOKS, ADD_BOOK, EDIT_AUTHOR}
+
+export default {ALL_AUTHORS, ALL_BOOKS, ADD_BOOK, EDIT_AUTHOR, LOGIN}
