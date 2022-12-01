@@ -2,6 +2,7 @@ const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone');
 const mongoose = require('mongoose')
 require('dotenv').config()
+const { GraphQLError } = require('graphql');
 const Book = require('./models/book')
 const Author = require('./models/author')
 
@@ -122,20 +123,52 @@ const resolvers = {
       if(!author) {
         const newAuthor = new Author({name: args.author})
         const book = new Book({...args, author: newAuthor._id})
-        await newAuthor.save()
-        return book.save()
+
+        try {
+          await newAuthor.save()
+          await book.save()
+        } catch(error) {
+          console.log(error)
+          throw new GraphQLError('Invalid argument value', {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+            },
+          });
+        }
+
+        return book
       }
+
       const book = new Book({...args, author: author._id})
-      return book.save()
+
+      try {
+        await book.save()
+      } catch(error) {
+        throw new GraphQLError('Invalid argument value', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+          },
+        });
+      }
+
+      return book;
     },
+
     editAuthor: async (root, args) => {
       const author = await Author.findOne({name: args.name})
-      if(author) {
-        author.born = args.setBorn
-        return author.save()
+      author.born = args.setBorn
+      try {
+        await author.save()
+      } catch (error) {
+        throw new GraphQLError('Invalid argument value', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+          },
+        });
       }
-      return null
-    }
+    
+      return author
+    } 
   }
 }
 
