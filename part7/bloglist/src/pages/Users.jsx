@@ -1,20 +1,24 @@
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+import { Container, Spacer, Link } from '@nextui-org/react';
 
 const Users = () => {
   const users = useSelector((state) => state.users);
   return (
-    <div>
+    <Container>
       <h2>Users</h2>
       {users.map((user) => (
         <div key={user.id}>
-          <Link to={`/blogs/${user.id}`}>{user.name}</Link>
+          <Link as={RouterLink} to={`/users/${user.id}`}>
+            {user.name}
+          </Link>
           <span>
-            : {user.blogs.length} {user.blogs.length === 1 ? 'Blog' : 'Blogs'}
+            Has {user.blogs.length} {user.blogs.length === 1 ? 'Blog' : 'Blogs'}
           </span>
+          <Spacer />
         </div>
       ))}
-    </div>
+    </Container>
   );
 };
 

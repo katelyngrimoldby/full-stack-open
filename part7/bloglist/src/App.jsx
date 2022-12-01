@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Routes, Route, useMatch, Link } from 'react-router-dom';
+import { Routes, Route, useMatch } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+import {
+  Button,
+  Navbar,
+  Container,
+  Spacer,
+  Input,
+  Card,
+  Text,
+} from '@nextui-org/react';
 import { getBlogs } from './reducers/blogReducer';
 import { getUsers } from './reducers/userReducer';
 import { setAuth, getAuth, clearAuth } from './reducers/authReducer';
@@ -55,37 +65,66 @@ const App = () => {
 
   return (
     <>
-      {message && <p>{message.message}</p>}
       {!user ? (
-        <div>
+        <Container>
           <h2>Log In</h2>
+          <Spacer y={1.5} />
           <form onSubmit={handleLogin}>
-            <label htmlFor='username'>Username</label>
-            <input
+            <Input
               type='text'
               id='username'
               value={username}
               onChange={(event) => setUsername(event.target.value)}
+              labelPlaceholder='Username'
             />
-            <label htmlFor='password'>Password</label>
-            <input
+            <Spacer y={2} />
+            <Input.Password
               type='password'
               id='password'
               value={password}
               onChange={(event) => setPassword(event.target.value)}
+              labelPlaceholder='Password'
             />
-            <button type='submit' id='login'>
+            <Spacer y={1} />
+            <Button type='submit' id='login'>
               Log In
-            </button>
+            </Button>
           </form>
-        </div>
+        </Container>
       ) : (
         <>
-          <div>
-            <Link to='/blogs'>Blogs</Link> <Link to='/users'>Users</Link>{' '}
-            <span>Logged in as {user.name}</span>{' '}
-            <button onClick={handleLogout}>Log Out</button>
-          </div>
+          <Navbar>
+            <Navbar.Content>
+              <Navbar.Link block='true' as={RouterLink} to='/blogs'>
+                Blogs
+              </Navbar.Link>
+              <Navbar.Link block='true' as={RouterLink} to='/users'>
+                Users
+              </Navbar.Link>
+              <span>Logged in as {user.name}</span>{' '}
+              <Button flat='true' onClick={handleLogout} auto='true'>
+                Log Out
+              </Button>
+            </Navbar.Content>
+          </Navbar>
+          <Spacer />
+          {message && (
+            <Container>
+              <Card
+                css={{
+                  $$cardColor:
+                    message.type == 'success'
+                      ? '$colors$success'
+                      : '$colors$error',
+                }}
+              >
+                <Card.Body>
+                  <Text color='white'>{message.message}</Text>
+                </Card.Body>
+              </Card>
+              <Spacer />
+            </Container>
+          )}
           <Routes>
             <Route path='/' element={<Blogs />} />
             <Route path='users' element={<Users />} />

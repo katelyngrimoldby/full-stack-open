@@ -55,7 +55,7 @@ export const createBlog = (payload, token) => {
         )
       );
     } catch (error) {
-      dispatch(triggerMessage({ type: 'error', message: error.response.data.error }, 5))
+      dispatch(triggerMessage({ type: 'error', message: error.response.data.error || error.response.data}, 5))
     }
   }
 }

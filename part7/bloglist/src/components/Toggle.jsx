@@ -1,5 +1,6 @@
-import { useState, forwardRef, useImperativeHandle } from "react";
-import PropTypes from "prop-types";
+import { useState, forwardRef, useImperativeHandle } from 'react';
+import { Button, Spacer } from '@nextui-org/react';
+import PropTypes from 'prop-types';
 
 const Toggle = forwardRef(({ children }, refs) => {
   const [visible, setVisible] = useState(false);
@@ -16,7 +17,10 @@ const Toggle = forwardRef(({ children }, refs) => {
   return (
     <>
       {visible && children}
-      <button onClick={handleClick}>{visible ? "Hide" : "Show"}</button>
+      <Spacer y={2} />
+      <Button flat='true' onClick={handleClick} auto='true'>
+        {visible ? 'Hide' : 'Show'}
+      </Button>
     </>
   );
 });
@@ -25,5 +29,5 @@ Toggle.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-Toggle.displayName = "Toggle";
+Toggle.displayName = 'Toggle';
 export default Toggle;

@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { triggerMessage } from '../reducers/messageReducer';
 import { createBlog } from '../reducers/blogReducer';
+import { Button, Input, Spacer } from '@nextui-org/react';
 import Toggle from './Toggle';
 
 const BlogForm = () => {
@@ -31,30 +31,34 @@ const BlogForm = () => {
   return (
     <Toggle ref={blogFormRef}>
       <form onSubmit={addBlog}>
-        <label htmlFor='title'>Title: </label>
-        <input
+        <Spacer />
+        <Input
           type='text'
           id='title'
           value={title}
           onChange={(event) => setTitle(event.target.value)}
+          labelPlaceholder='Title'
         />
-        <label htmlFor='author'>Author: </label>
-        <input
+        <Spacer y={2} />
+        <Input
           type='text'
           id='author'
           value={author}
           onChange={(event) => setAuthor(event.target.value)}
+          labelPlaceholder='Author'
         />
-        <label htmlFor='url'>URL: </label>
-        <input
+        <Spacer y={2} />
+        <Input
           type='text'
           id='url'
           value={url}
           onChange={(event) => setUrl(event.target.value)}
+          labelPlaceholder='URL'
         />
-        <button type='submit' id='add'>
+        <Spacer />
+        <Button auto='true' type='submit' id='add'>
           Add
-        </button>
+        </Button>
       </form>
     </Toggle>
   );
