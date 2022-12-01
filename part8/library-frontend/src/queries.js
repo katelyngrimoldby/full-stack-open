@@ -6,6 +6,7 @@ const ALL_AUTHORS = gql`
       name
       born
       bookCount
+      id
     }
   }
 `;
@@ -16,6 +17,7 @@ const ALL_BOOKS = gql`
       title
       author
       published
+      id
     }
   }
 `;
@@ -31,8 +33,23 @@ const ADD_BOOK = gql`
       title
       author
       published
+      id
+    }
+  }
+`
+const EDIT_AUTHOR = gql`
+  mutation($name: String! $year: Int!) {
+    editAuthor(
+      name: $name
+      setBorn: $year
+    ) {
+      name
+      born
+      bookCount
+      id
     }
   }
 `
 
-export default {ALL_AUTHORS, ALL_BOOKS, ADD_BOOK}
+
+export default {ALL_AUTHORS, ALL_BOOKS, ADD_BOOK, EDIT_AUTHOR}

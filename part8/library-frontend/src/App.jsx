@@ -4,6 +4,7 @@ import queries from './queries';
 import Authors from './components/Authors';
 import Books from './components/Books';
 import NewBook from './components/NewBook';
+import UpdateAuthor from './components/UpdateAuthor';
 
 const App = () => {
   const [page, setPage] = useState('authors');
@@ -16,6 +17,7 @@ const App = () => {
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         <button onClick={() => setPage('add')}>add book</button>
+        <button onClick={() => setPage('update')}>update author</button>
       </div>
 
       {authors.loading ? (
@@ -31,6 +33,15 @@ const App = () => {
       )}
 
       <NewBook show={page === 'add'} />
+
+      {authors.loading ? (
+        <div>Loading...</div>
+      ) : (
+        <UpdateAuthor
+          show={page === 'update'}
+          authors={authors.data.allAuthors}
+        />
+      )}
     </div>
   );
 };
