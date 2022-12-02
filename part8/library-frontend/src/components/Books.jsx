@@ -12,10 +12,13 @@ const Books = ({ show }) => {
       setGenres([...new Set(allGenres.flat())]);
     },
   });
-  const [getBooks, { loading, error, data }] = useLazyQuery(queries.ALL_BOOKS);
+  const [getBooks, { loading, error, data }] = useLazyQuery(queries.ALL_BOOKS, {
+    fetchPolicy: 'no-cache',
+  });
 
   useEffect(() => {
     getBooks();
+    setFilter('');
   }, []);
 
   const handleClick = (event) => {

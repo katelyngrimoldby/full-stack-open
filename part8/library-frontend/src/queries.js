@@ -41,7 +41,6 @@ const ADD_BOOK = gql`
       genres: $genres
     ) {
       title
-      author
       published
       id
     }
