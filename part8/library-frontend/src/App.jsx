@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react';
-import { useQuery } from '@apollo/client';
+import { useQuery, useApolloClient } from '@apollo/client';
 import queries from './queries';
 import Authors from './components/Authors';
 import Books from './components/Books';
 import NewBook from './components/NewBook';
 import UpdateAuthor from './components/UpdateAuthor';
 import Login from './components/Login';
+import Recommended from './components/Recommended';
 
 const App = () => {
   const [token, setToken] = useState('');
   const [page, setPage] = useState('authors');
   const authors = useQuery(queries.ALL_AUTHORS);
-  const books = useQuery(queries.ALL_BOOKS);
+  const me = useQuery(queries.ME);
+  const client = useApolloClient();
 
   useEffect(() => {
     const token = window.localStorage.getItem('user-token');
@@ -24,6 +26,7 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem('user-token');
     setToken('');
+    client.resetStore();
   };
 
   return (
@@ -35,6 +38,9 @@ const App = () => {
         {token && (
           <button onClick={() => setPage('update')}>update author</button>
         )}
+        {token && (
+          <button onClick={() => setPage('recommended')}>recommended</button>
+        )}
         {token && <button onClick={handleLogout}>logout</button>}
         {!token && <button onClick={() => setPage('login')}>login</button>}
       </div>
@@ -45,11 +51,7 @@ const App = () => {
         <Authors show={page === 'authors'} authors={authors.data.allAuthors} />
       )}
 
-      {books.loading ? (
-        <div>Loading...</div>
-      ) : (
-        <Books show={page === 'books'} books={books.data.allBooks} />
-      )}
+      <Books show={page === 'books'} />
 
       <NewBook show={page === 'add'} />
 
@@ -62,6 +64,14 @@ const App = () => {
         />
       )}
       <Login show={page === 'login'} setToken={setToken} setPage={setPage} />
+      {me.loading ? (
+        <div>Loading...</div>
+      ) : (
+        <Recommended
+          show={page === 'recommended'}
+          favGenre={me.data.me.favouriteGenre}
+        />
+      )}
     </div>
   );
 };
