@@ -12,9 +12,9 @@ const resolvers = {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
-      let result = await Book.find({}).populate('author', {name: 1})
+      let result = await Book.find({}).populate('author', {name: 1, born:1})
       if(args.genre) {
-        result = await Book.find({genres: {$in: [args.genre]}}).populate('author', {name: 1})
+        result = await Book.find({genres: {$in: [args.genre]}}).populate('author', {name: 1, born: 1})
       }
 
       return result
@@ -29,9 +29,9 @@ const resolvers = {
     }
   },
 
-  // Author: {
-  //   bookCount: (root) => books.filter(book => book.author === root.name).length
-  // },
+  Author: {
+    bookCount: (root) => root.books.length
+  },
 
   Mutation: {
     addBook: async (root, args, context) => {
