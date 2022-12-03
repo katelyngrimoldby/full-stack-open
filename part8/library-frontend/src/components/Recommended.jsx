@@ -1,11 +1,15 @@
 import { useEffect } from 'react';
-import { useQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import queries from '../queries';
 
-const Recommended = ({ show, favGenre }) => {
-  const { loading, error, data } = useQuery(queries.ALL_BOOKS, {
-    variables: { genre: favGenre },
+const Recommended = ({ show, favGenre, books }) => {
+  const [getBooks, { loading, error, data }] = useLazyQuery(queries.ALL_BOOKS, {
+    fetchPolicy: 'no-cache',
   });
+
+  useEffect(() => {
+    getBooks({ variables: { genre: favGenre } });
+  }, [books]);
 
   if (loading) {
     return <div>Loading...</div>;

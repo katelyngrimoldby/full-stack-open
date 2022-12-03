@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useQuery, useApolloClient } from '@apollo/client';
+import { useQuery, useApolloClient, useSubscription } from '@apollo/client';
 import queries from './queries';
 import Authors from './components/Authors';
 import Books from './components/Books';
@@ -12,7 +12,20 @@ const App = () => {
   const [token, setToken] = useState('');
   const [page, setPage] = useState('authors');
   const authors = useQuery(queries.ALL_AUTHORS);
+  const books = useQuery(queries.ALL_BOOKS);
   const me = useQuery(queries.ME);
+  useSubscription(queries.BOOK_ADDED, {
+    onData: ({ data }) => {
+      const addedBook = data.data.bookAdded;
+      window.alert(`Added ${addedBook.title} by ${addedBook.author.name}`);
+
+      client.cache.updateQuery({ query: queries.ALL_BOOKS }, ({ allBooks }) => {
+        return {
+          allBooks: allBooks.concat(addedBook),
+        };
+      });
+    },
+  });
   const client = useApolloClient();
 
   useEffect(() => {
@@ -21,7 +34,7 @@ const App = () => {
     if (token) {
       setToken(token);
     }
-  });
+  }, []);
 
   const handleLogout = () => {
     window.localStorage.removeItem('user-token');
@@ -51,7 +64,11 @@ const App = () => {
         <Authors show={page === 'authors'} authors={authors.data.allAuthors} />
       )}
 
-      <Books show={page === 'books'} />
+      {books.loading ? (
+        <div>Loading...</div>
+      ) : (
+        <Books show={page === 'books'} allBooks={books.data.allBooks} />
+      )}
 
       <NewBook show={page === 'add'} />
 
@@ -64,13 +81,16 @@ const App = () => {
         />
       )}
       <Login show={page === 'login'} setToken={setToken} setPage={setPage} />
-      {me.loading ? (
+      {me.loading || books.loading ? (
         <div>Loading...</div>
       ) : (
-        <Recommended
-          show={page === 'recommended'}
-          favGenre={me.data.me.favouriteGenre}
-        />
+        token && (
+          <Recommended
+            show={page === 'recommended'}
+            favGenre={me.data.me.favouriteGenre}
+            books={books.data.allBooks}
+          />
+        )
       )}
     </div>
   );

@@ -2,24 +2,20 @@ import { useState, useEffect } from 'react';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import queries from '../queries';
 
-const Books = ({ show }) => {
+const Books = ({ show, allBooks }) => {
   const [genres, setGenres] = useState([]);
   const [filter, setFilter] = useState('');
-  useQuery(queries.ALL_BOOKS, {
-    onCompleted: (data) => {
-      const allGenres = data.allBooks.map((book) => book.genres);
-
-      setGenres([...new Set(allGenres.flat())]);
-    },
-  });
   const [getBooks, { loading, error, data }] = useLazyQuery(queries.ALL_BOOKS, {
     fetchPolicy: 'no-cache',
   });
 
   useEffect(() => {
+    const allGenres = allBooks.map((book) => book.genres);
+
+    setGenres([...new Set(allGenres.flat())]);
     getBooks();
     setFilter('');
-  }, []);
+  }, [allBooks]);
 
   const handleClick = (event) => {
     setFilter(event.target.id);
@@ -33,7 +29,7 @@ const Books = ({ show }) => {
   if (loading) {
     return <div>Loading...</div>;
   }
-
+  error && console.log(error);
   return (
     <div>
       <h2>books</h2>
@@ -45,7 +41,7 @@ const Books = ({ show }) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {data.allBooks &&
+          {data &&
             data.allBooks.map((a) => (
               <tr key={a.title}>
                 <td>{a.title}</td>
