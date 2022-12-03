@@ -24,5 +24,10 @@ const calculateBmi = (height: number, weight: number): string => {
       throw new Error('What went wrong??')
   }
 }
-
-console.log(calculateBmi(180, 74))
+try {
+  console.log(calculateBmi(180, 74))
+} catch(err) {
+  if(err instanceof Error) {
+    console.log(err.message)
+  }
+}
