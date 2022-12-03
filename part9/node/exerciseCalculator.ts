@@ -8,7 +8,7 @@ interface Result {
   average: number
 }
 
-const calculateExercises = (hours: number[], target: number): Result => {
+const calculateExercises = (target: number, hours: number[]): Result => {
 
   const trainingDays = hours.filter(day => day > 0)
 
@@ -43,8 +43,32 @@ const calculateExercises = (hours: number[], target: number): Result => {
   }
 }
 
+interface ExerciseValues {
+  target: number
+  hours: number[]
+}
+
+const parseExerciseArgs = (args: string[]): ExerciseValues => {
+  if(args.length < 4) throw new Error('Missing arguments')
+
+  const parameters = args.slice(2)
+  parameters.forEach(param => {
+    if(isNaN(Number(param))) {
+      throw new Error('One or more arguments are not numbers')
+    }
+  })
+
+  const numArgs = parameters.map(param => Number(param))
+
+  return {
+    target: numArgs[0],
+    hours: numArgs.slice(1)
+  }
+}
+
 try {
-  console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 1))
+  const {target, hours} = parseExerciseArgs(process.argv)
+  console.log(calculateExercises(target, hours))
 } catch (error) {
   if(error instanceof Error) {
     console.log(error.message)
