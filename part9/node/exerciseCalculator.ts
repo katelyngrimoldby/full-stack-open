@@ -43,34 +43,36 @@ const calculateExercises = (target: number, hours: number[]): Result => {
   };
 };
 
-interface ExerciseValues {
-  target: number
-  hours: number[]
-}
+// interface ExerciseValues {
+//   target: number
+//   hours: number[]
+// }
 
-const parseExerciseArgs = (args: string[]): ExerciseValues => {
-  if(args.length < 4) throw new Error('Missing arguments');
+// const parseExerciseArgs = (args: string[]): ExerciseValues => {
+//   if(args.length < 4) throw new Error('Missing arguments');
 
-  const parameters = args.slice(2);
-  parameters.forEach(param => {
-    if(isNaN(Number(param))) {
-      throw new Error('One or more arguments are not numbers');
-    }
-  });
+//   const parameters = args.slice(2);
+//   parameters.forEach(param => {
+//     if(isNaN(Number(param))) {
+//       throw new Error('One or more arguments are not numbers');
+//     }
+//   });
 
-  const numArgs = parameters.map(param => Number(param));
+//   const numArgs = parameters.map(param => Number(param));
 
-  return {
-    target: numArgs[0],
-    hours: numArgs.slice(1)
-  };
-};
+//   return {
+//     target: numArgs[0],
+//     hours: numArgs.slice(1)
+//   };
+// };
 
-try {
-  const {target, hours} = parseExerciseArgs(process.argv);
-  console.log(calculateExercises(target, hours));
-} catch (error) {
-  if(error instanceof Error) {
-    console.log(error.message);
-  }
-}
+// try {
+//   const {target, hours} = parseExerciseArgs(process.argv);
+//   console.log(calculateExercises(target, hours));
+// } catch (error) {
+//   if(error instanceof Error) {
+//     console.log(error.message);
+//   }
+// }
+
+export default calculateExercises;
