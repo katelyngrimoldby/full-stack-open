@@ -23,7 +23,7 @@
     },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-      "project": "./part9/node/tsconfig.json",
+      "project": "./part9/basics/tsconfig.json",
       "sourceType": "module"
     }
   }
