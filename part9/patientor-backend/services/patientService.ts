@@ -1,5 +1,6 @@
-import data from '../data/patients.json';
-import { Patient, CensoredPatient } from '../types';
+import { v1 as uuid } from 'uuid';
+import data from '../data/patients';
+import { Patient, CensoredPatient, NewPatient } from '../types';
 
 const patients: Patient[] = data;
 
@@ -13,4 +14,15 @@ const getAll = (): CensoredPatient[] => {
   }));
 };
 
-export default {getAll};
+const addPatient = (obj: NewPatient): Patient => {
+  const newPatient = {
+    id: uuid(),
+    ...obj
+  };
+
+  patients.concat(newPatient);
+
+  return newPatient;
+};
+
+export default {getAll, addPatient};
