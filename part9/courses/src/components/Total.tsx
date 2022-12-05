@@ -1,7 +1,9 @@
-import { CourseContents } from "../types";
+import { CoursePart } from "../types";
 
-const Total = ({parts}: {parts: CourseContents}) => {
-  const totalExercises = parts[0].exerciseCount + parts[1].exerciseCount + parts[2].exerciseCount
+const Total = ({parts}: {parts: CoursePart[]}) => {
+  const totalExercises = parts.reduce((accumulator, current) => {
+    return accumulator + current.exerciseCount
+  }, 0)
 
   return <p>Number of exercises: {totalExercises}</p>
 }

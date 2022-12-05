@@ -1,13 +1,11 @@
 import Part from "./Part";
-import { CourseContents } from "../types";
+import { CoursePart } from "../types";
 
-const Content = ({content}: {content: CourseContents}) => {
+const Content = ({content}: {content: CoursePart[]}) => {
 
   return(
     <div>
-      <Part content={content[0]} />
-      <Part content={content[1]} />
-      <Part content={content[2]} />
+      {content.map((element) => <Part content={element} key={element.name} />)}
     </div>
   )
 }
