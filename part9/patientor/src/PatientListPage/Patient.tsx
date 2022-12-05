@@ -1,10 +1,18 @@
-// import axios from "axios";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Patient } from "../types";
 import { apiBaseUrl } from "../constants";
 import { useStateValue, updatePatient } from "../state";
-import axios from "axios";
+import HospEntry from "../components/HospEntry";
+import OccupationalEntry from "../components/OccupationalEntry";
+import HealthEntry from "../components/HealthEntry";
+
+const assertNever = (value: never): never => {
+  throw new Error(
+    `Unhandled discriminated union member: ${JSON.stringify(value)}`
+  );
+};
 
 const PatientPage = () => {
 const [{ patients }, dispatch] = useStateValue();
@@ -53,6 +61,18 @@ if(!patient) {
       <h3>{patient.gender}</h3>
       <p>SSN: {patient.ssn}</p>
       <p>Occupation: {patient.occupation}</p>
+      {patient.entries && patient.entries.map(entry => {
+        switch (entry.type) {
+          case 'Hospital':
+            return <HospEntry entry={entry} />;
+          case 'OccupationalHealthcare':
+            return <OccupationalEntry entry={entry} />;
+          case 'HealthCheck':
+            return <HealthEntry entry={entry} />;
+          default:
+            assertNever(entry);
+        }
+      })}
     </div>
   );
 };
