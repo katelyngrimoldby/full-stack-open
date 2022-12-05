@@ -58,9 +58,10 @@ if(!patient) {
   return(
     <div>
       <h1>{patient.name}</h1>
-      <h3>{patient.gender}</h3>
+      <h2>{patient.gender}</h2>
       <p>SSN: {patient.ssn}</p>
       <p>Occupation: {patient.occupation}</p>
+      <h3>Entries</h3>
       {patient.entries && patient.entries.map(entry => {
         switch (entry.type) {
           case 'Hospital':
@@ -73,6 +74,7 @@ if(!patient) {
             assertNever(entry);
         }
       })}
+      {(patient.entries && patient.entries.length === 0) && (<p>No entries</p>)}
     </div>
   );
 };
