@@ -1,18 +1,60 @@
+// enums
+
 export enum Gender {
   Male = 'male',
   Female = 'female',
   Other = 'other'
 }
-
-export interface Entry {
-
+export enum HealthCheckRating {
+  "Healthy" = 0,
+  "LowRisk" = 1,
+  "HighRisk" = 2,
+  "CriticalRisk" = 3
 }
+
+// Diagnosis typings
 
 export interface Diagnosis {
   code: string
   name: string
   latin?: string
 }
+
+// Entry typings
+
+interface BaseEntry {
+  id: string
+  description: string
+  date: string
+  specialist: string
+  diagnosisCodes?: Diagnosis['code'][]
+}
+
+interface HealthCheckEntry extends BaseEntry {
+  type: "HealthCheck";
+  healthCheckRating: HealthCheckRating;
+}
+
+interface HosptitalEntry extends BaseEntry {
+  type: "Hospital"
+  discharge: {
+    date: string
+    criteria: string
+  }
+}
+
+interface OccupationalHealthcareEntry extends BaseEntry {
+  type: "OccupationalHealthcare"
+  employerName: string
+  sickLeave?: {
+    startDate: string
+    endDate: string
+  }
+}
+
+export type Entry = HealthCheckEntry | HosptitalEntry | OccupationalHealthcareEntry;
+
+// Patient typings
 
 export interface Patient {
   id: string
