@@ -1,0 +1,15 @@
+POST http://localhost:3001/api/patients/d27736ec-f723-11e9-8f0b-362b9e155667/entries
+Content-Type: application/json
+
+{
+  "type": "OccupationalHealthcare",
+  "description": "Test Occupational",
+  "date": "1999-04-25",
+  "specialist": "Tester",
+  "diagnosisCodes": [],
+  "employerName": "Test Inc",
+  "sickLeave": {
+    "startDate": "1999-04-25",
+    "endDate": "1999-04-30"
+  }
+}

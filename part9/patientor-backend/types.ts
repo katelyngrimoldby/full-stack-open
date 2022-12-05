@@ -35,7 +35,7 @@ interface HealthCheckEntry extends BaseEntry {
   healthCheckRating: HealthCheckRating;
 }
 
-interface HosptitalEntry extends BaseEntry {
+interface HospitalEntry extends BaseEntry {
   type: "Hospital"
   discharge: {
     date: string
@@ -52,7 +52,11 @@ interface OccupationalHealthcareEntry extends BaseEntry {
   }
 }
 
-export type Entry = HealthCheckEntry | HosptitalEntry | OccupationalHealthcareEntry;
+export type Entry = HealthCheckEntry | HospitalEntry | OccupationalHealthcareEntry;
+
+export type NewHealthCheckEntry = Omit<HealthCheckEntry, 'id'>;
+export type NewHospitalEntry = Omit<HospitalEntry, 'id'>;
+export type NewOccupationalHealthcareEntry = Omit<OccupationalHealthcareEntry, 'id'>;
 
 // Patient typings
 

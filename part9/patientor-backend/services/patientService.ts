@@ -1,6 +1,6 @@
 import { v1 as uuid } from 'uuid';
 import data from '../data/patients';
-import { Patient, CensoredPatient, NewPatient } from '../types';
+import { Patient, CensoredPatient, NewPatient, NewHealthCheckEntry, NewHospitalEntry, NewOccupationalHealthcareEntry, Entry } from '../types';
 
 const patients: Patient[] = data;
 
@@ -31,4 +31,19 @@ const addPatient = (obj: NewPatient): Patient => {
   return newPatient;
 };
 
-export default {getAll, addPatient, getOne};
+const addEntry = (patient: Patient, entry: NewHealthCheckEntry | NewHospitalEntry | NewOccupationalHealthcareEntry): Entry => {
+  const newEntry = {
+    ...entry,
+    id: uuid()
+  };
+
+  const updatedPatient = {
+    ...patient,
+    entries: patient.entries.concat(newEntry)
+  };
+  const index = patients.indexOf(patient);
+  patients[index] = updatedPatient;
+  return newEntry;
+};
+
+export default {getAll, addPatient, getOne, addEntry};
