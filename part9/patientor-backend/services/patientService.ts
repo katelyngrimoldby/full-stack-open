@@ -14,6 +14,12 @@ const getAll = (): CensoredPatient[] => {
   }));
 };
 
+const getOne = (id: string): Patient | undefined => {
+  const patient = patients.find(patient => patient.id === id);
+
+  return patient;
+};
+
 const addPatient = (obj: NewPatient): Patient => {
   const newPatient = {
     id: uuid(),
@@ -25,4 +31,4 @@ const addPatient = (obj: NewPatient): Patient => {
   return newPatient;
 };
 
-export default {getAll, addPatient};
+export default {getAll, addPatient, getOne};
