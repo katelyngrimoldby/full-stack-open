@@ -37,8 +37,8 @@ router.post('/:id/entries', (req, res) => {
   if(patient) {
     try {
       const newEntry = toNewEntry(req.body);
-      const addedEntry = patientService.addEntry(patient, newEntry);
-      return res.json(addedEntry);
+      const updatedPatient = patientService.addEntry(patient, newEntry);
+      return res.json(updatedPatient);
     } catch(error) {
       if(error instanceof Error) {
         return res.status(400).json({error: error.message});

@@ -7,7 +7,7 @@ import {
   TextField as TextFieldMUI,
   Typography,
 } from "@material-ui/core";
-import { Diagnosis, Gender } from "../types";
+import { Diagnosis, Gender, HealthCheckRating } from "../types";
 import { InputLabel } from "@material-ui/core";
 import Input from '@material-ui/core/Input';
 
@@ -17,16 +17,76 @@ export type GenderOption = {
   label: string;
 };
 
+export type TypeOption = {
+  value: "Hospital" | "HealthCheck" | "OccupationalHealthcare"
+  label: string
+};
+
+export type RatingOption = {
+  value: HealthCheckRating
+  label: string
+};
+
 // props for select field component
-type SelectFieldProps = {
+type GenderFieldProps = {
   name: string;
   label: string;
   options: GenderOption[];
 };
 
+type TypeFieldProps = {
+  name: string;
+  label: string;
+  options: TypeOption[];
+};
+
+type RatingFieldProps = {
+  name: string
+  label: string
+  options: RatingOption[]
+};
+
 const FormikSelect = ({ field, ...props }: FieldProps) => <Select {...field} {...props} />;
 
-export const SelectField = ({ name, label, options }: SelectFieldProps) => (
+export const GenderField = ({ name, label, options }: GenderFieldProps) => (
+  <>
+    <InputLabel>{label}</InputLabel>
+    <Field
+      fullWidth
+      style={{ marginBottom: "0.5em" }}
+      label={label}
+      component={FormikSelect}
+      name={name}
+    >
+      {options.map((option) => (
+        <MenuItem key={option.value} value={option.value}>
+          {option.label || option.value}
+        </MenuItem>
+      ))}
+    </Field>
+  </>
+);
+
+export const TypeField = ({ name, label, options }: TypeFieldProps) => (
+  <>
+    <InputLabel>{label}</InputLabel>
+    <Field
+      fullWidth
+      style={{ marginBottom: "0.5em" }}
+      label={label}
+      component={FormikSelect}
+      name={name}
+    >
+      {options.map((option) => (
+        <MenuItem key={option.value} value={option.value}>
+          {option.label || option.value}
+        </MenuItem>
+      ))}
+    </Field>
+  </>
+);
+
+export const RatingField = ({ name, label, options }: RatingFieldProps) => (
   <>
     <InputLabel>{label}</InputLabel>
     <Field

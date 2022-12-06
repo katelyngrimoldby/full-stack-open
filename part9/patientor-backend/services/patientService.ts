@@ -1,6 +1,6 @@
 import { v1 as uuid } from 'uuid';
 import data from '../data/patients';
-import { Patient, CensoredPatient, NewPatient, NewHealthCheckEntry, NewHospitalEntry, NewOccupationalHealthcareEntry, Entry } from '../types';
+import { Patient, CensoredPatient, NewPatient, NewHealthCheckEntry, NewHospitalEntry, NewOccupationalHealthcareEntry } from '../types';
 
 const patients: Patient[] = data;
 
@@ -31,7 +31,7 @@ const addPatient = (obj: NewPatient): Patient => {
   return newPatient;
 };
 
-const addEntry = (patient: Patient, entry: NewHealthCheckEntry | NewHospitalEntry | NewOccupationalHealthcareEntry): Entry => {
+const addEntry = (patient: Patient, entry: NewHealthCheckEntry | NewHospitalEntry | NewOccupationalHealthcareEntry): Patient => {
   const newEntry = {
     ...entry,
     id: uuid()
@@ -43,7 +43,7 @@ const addEntry = (patient: Patient, entry: NewHealthCheckEntry | NewHospitalEntr
   };
   const index = patients.indexOf(patient);
   patients[index] = updatedPatient;
-  return newEntry;
+  return updatedPatient;
 };
 
 export default {getAll, addPatient, getOne, addEntry};

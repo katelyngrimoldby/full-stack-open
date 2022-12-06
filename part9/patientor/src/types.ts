@@ -63,4 +63,18 @@ export interface OccupationalHealthcareEntry extends BaseEntry {
   }
 }
 
+export interface EntryForm extends BaseEntry {
+  type: "Hospital" | "HealthCheck" | "OccupationalHealthcare"
+  healthCheckRating: HealthCheckRating;
+  discharge: {
+    date: string
+    criteria: string
+  }
+  employerName: string
+  sickLeave?: {
+    startDate: string
+    endDate: string
+  }
+}
+
 export type Entry = HealthCheckEntry | HospitalEntry | OccupationalHealthcareEntry;
