@@ -19,15 +19,38 @@ router.post('/', async (req, res) => {
 const blogFinder = async (req, res, next) => {
   const {id} = req.params
 
-  req.blog = Blog.findByPk(id)
-  if(!req.blog) res.status(404).end()
+  req.blog = await Blog.findByPk(id)
+  if(!req.blog) return res.status(404).end()
 
   next()
 }
 
+singleRouter.get('/', async (req, res) => {
+  if(req.blog) {
+    res.json(req.blog)
+  } else {
+    res.status(404).end
+  }
+})
+
 singleRouter.delete('/', async (req, res) => {
-  await req.blog.destroy()
-  res.status(204).end()
+  if(req.blog) {
+    await req.blog.destroy()
+    res.status(204).end()
+  } else {
+    res.status(404).end()
+  }
+})
+
+singleRouter.put('/', async (req, res) => {
+  if(req.blog) {
+    req.blog.likes = req.blog.likes + 1
+    await req.blog.save()
+  
+    res.json({likes: req.blog.likes})
+  } else {
+    res.status(404).end
+  }
 })
 
 router.use('/:id', blogFinder, singleRouter)
