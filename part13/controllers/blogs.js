@@ -8,12 +8,8 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  try {
-    const blog = await Blog.create(req.body)
-    return res.json(blog)
-  } catch (error) {
-    return res.status(400).json({ error })
-  }
+  const blog = await Blog.create(req.body)
+  return res.json(blog)
 })
 
 const blogFinder = async (req, res, next) => {
@@ -44,7 +40,7 @@ singleRouter.delete('/', async (req, res) => {
 
 singleRouter.put('/', async (req, res) => {
   if(req.blog) {
-    req.blog.likes = req.blog.likes + 1
+    req.blog.likes = req.blog.likes + req.body.likes
     await req.blog.save()
   
     res.json({likes: req.blog.likes})
