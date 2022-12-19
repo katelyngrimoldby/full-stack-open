@@ -24,14 +24,17 @@ router.get('/', async (req, res) => {
     }
     console.log(where)
   }
-  
+
   const blogs = await Blog.findAll({
     attributes: { exclude: ['userId'] },
     include: {
       model: User,
       attributes: ['name']
     },
-    where
+    where,
+    order: [
+      ['likes', 'DESC']
+    ]
   })
   res.json(blogs)
 })
@@ -76,7 +79,8 @@ singleRouter.delete('/', tokenExtractor, async (req, res) => {
 
 singleRouter.put('/', async (req, res) => {
   if(req.blog) {
-    req.blog.likes = req.blog.likes + req.body.likes
+    req.blog.likes = req.blog.likes + Number(req.body.likes)
+    console.log(req.blog)
     await req.blog.save()
   
     res.json({likes: req.blog.likes})
