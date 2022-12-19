@@ -16,7 +16,6 @@ router.get('/', async (req, res) => {
 
 
 router.post('/', tokenExtractor, async (req, res) => {
-  console.log(req.decodedToken)
   const user = await User.findByPk(req.decodedToken.id)
   const blog = await Blog.create({...req.body, userId: user.id})
   return res.json(blog)
@@ -39,10 +38,15 @@ singleRouter.get('/', async (req, res) => {
   }
 })
 
-singleRouter.delete('/', async (req, res) => {
+singleRouter.delete('/', tokenExtractor, async (req, res) => {
   if(req.blog) {
-    await req.blog.destroy()
-    res.status(204).end()
+    const user = await User.findByPk(req.decodedToken.id)
+    if (user && user.id == req.blog.userId) {
+      await req.blog.destroy()
+      res.status(204).end()
+    } else {
+      res.status(401).json({error: "Invalid authentication"})
+    }
   } else {
     res.status(404).end()
   }
