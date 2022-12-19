@@ -1,5 +1,8 @@
 const errorHandler = (err, req, res, next) => {
-  res.status(400).json({err})
+  const errorMessages = err.errors.map((error) => {
+    return  error.message
+  })
+  res.status(400).json({errors: errorMessages})
 
   next(err)
 }
