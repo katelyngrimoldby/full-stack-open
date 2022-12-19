@@ -42,7 +42,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', tokenExtractor, async (req, res) => {
   const user = await User.findByPk(req.decodedToken.id)
-  const blog = await Blog.create({...req.body, userId: user.id})
+  const blog = await Blog.create({...req.body, userId: user.id, created_at: Date(), updated_at: Date()})
   return res.json(blog)
 })
 
@@ -80,6 +80,7 @@ singleRouter.delete('/', tokenExtractor, async (req, res) => {
 singleRouter.put('/', async (req, res) => {
   if(req.blog) {
     req.blog.likes = req.blog.likes + Number(req.body.likes)
+    req.blog.updated_at = Date()
     console.log(req.blog)
     await req.blog.save()
   

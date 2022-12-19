@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  const user = await User.create(req.body)
+  const user = await User.create({...req.body, created_at: Date(), updated_at: Date()})
   res.json(user)
 })
 
@@ -30,6 +30,7 @@ router.put('/:username', async (req, res) => {
   const user = await User.findOne({ where: {username: req.params.username }})
   if (user) {
     user.username = req.body.username
+    user.updated_at = Date()
     user.save()
     res.json(user)
   } else {

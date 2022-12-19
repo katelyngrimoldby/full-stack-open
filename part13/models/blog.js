@@ -32,6 +32,14 @@ Blog.init({
   updated_at: {
     type: DataTypes.DATE,
     allowNull: false
+  },
+  year: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    validate: {
+      min: 1991,
+      max: new Date().getFullYear()
+    }
   }
 }, {
   sequelize,
