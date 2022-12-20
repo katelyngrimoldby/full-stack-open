@@ -12,5 +12,6 @@ Blog.belongsToMany(User, {through: ReadingList, as: 'saved_by'})
 
 module.exports = {
   Blog,
-  User
+  User,
+  ReadingList
 }
