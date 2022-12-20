@@ -1,5 +1,5 @@
 const router = require('express').Router()
-
+const { Op } = require('sequelize')
 const { User, Blog, ReadingList } = require('../models')
 
 router.get('/', async (req, res) => {
@@ -18,12 +18,23 @@ router.post('/', async (req, res) => {
 })
 
 router.get('/:username', async (req, res) => {
+  let read = {
+    [Op.in]: [true, false]
+  }
+
+  if(req.query.read) {
+    read = req.query.read === 'true'
+  }
+
   const user = await User.findOne({
      where: {username: req.params.username },
      include: [{
       association: 'readings',
       attributes: {exclude: ['userId']},
-      through: {attributes: ['read', 'id']}
+      through: {
+        attributes: ['read', 'id'],
+        where: {read}
+      },
      },
     {
       model: Blog,
