@@ -42,6 +42,9 @@ router.get('/', async (req, res) => {
 
 router.post('/', tokenExtractor, async (req, res) => {
   const user = await User.findByPk(req.decodedToken.id)
+  if(user.disabled) {
+    return res.status(401).json({error: 'Invalid permissions'})
+  }
   const blog = await Blog.create({...req.body, userId: user.id, created_at: Date(), updated_at: Date()})
   return res.json(blog)
 })
@@ -66,7 +69,7 @@ singleRouter.get('/', async (req, res) => {
 singleRouter.delete('/', tokenExtractor, async (req, res) => {
   if(req.blog) {
     const user = await User.findByPk(req.decodedToken.id)
-    if (user && user.id == req.blog.userId) {
+    if (user && user.id == req.blog.userId && !user.disabled) {
       await req.blog.destroy()
       res.status(204).end()
     } else {

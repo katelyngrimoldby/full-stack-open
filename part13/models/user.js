@@ -22,6 +22,10 @@ User.init({
     type: DataTypes.STRING,
     allowNull: false
   },
+  disabled: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
   created_at: {
     type: DataTypes.DATE,
     allowNull: false
